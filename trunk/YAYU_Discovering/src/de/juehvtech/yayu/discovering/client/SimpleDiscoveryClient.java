@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Jens
  */
-class SimpleDiscoveryClient implements DiscoveringClient{
+class SimpleDiscoveryClient implements DiscoveringClient {
 
     @Override
     public ServerInformationPackage searchForServers(int port) {
@@ -30,26 +30,31 @@ class SimpleDiscoveryClient implements DiscoveringClient{
             InetAddress group = Inet4Address.getByName(Messages.GROUP);
             MulticastSocket socket = new MulticastSocket(port);
             socket.joinGroup(group);
-            socket.send(new DatagramPacket(new byte[]{Messages.REQUEST},1));
+            socket.send(new DatagramPacket(new byte[]{Messages.REQUEST}, 1,
+                    group, port));
             // wait for answer
             DatagramPacket answer = new DatagramPacket(new byte[256], 256);
             // buffer can't be larger than 256 because the length fiels is only
             // one byte
-            socket.receive(answer); // blocks until receives
-            byte[] data = answer.getData();
-            if (data[0] == Messages.ANSWER_REQUEST){
-                int length = (byte) data[1];
-                byte[] stringArray = new byte[length];
-                for (int i = 2; i<length+2;i++){
-                    stringArray[i-2] = data[i];
+            int round = 0;
+            while (round < 2) { // 1st run should receive the request
+                socket.receive(answer); // blocks until receives
+                // if there is no server it will block forever
+                byte[] data = answer.getData();
+                if (data[0] == Messages.ANSWER_REQUEST) {
+                    int length = (byte) data[1];
+                    byte[] stringArray = new byte[length];
+                    for (int i = 2; i < length + 2; i++) {
+                        stringArray[i - 2] = data[i];
+                    }
+                    retval = new String(stringArray);
+                    break;
                 }
-                retval = new String(stringArray);
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(SimpleDiscoveryClient.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
+        } finally {
             return ServerInformationPackage.parseString(retval);
         }
     }
-    
 }

@@ -5,23 +5,17 @@
 package de.juehvtech.yayu.vif.app;
 
 import de.juehvtech.yayu.vif.gui.MainGui;
-import java.awt.Event;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
  * @author Jens
  */
-public class YAYU_VIF_Creator {
+public class InternalLauncher {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+    public static void launchVIFCreator(final JFrame parent) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
@@ -30,7 +24,7 @@ public class YAYU_VIF_Creator {
             @Override
             public void run() {
                 MainGui gui = new MainGui();
-                gui.setLocationRelativeTo(null);
+                gui.setLocationRelativeTo(parent);
                 gui.setVisible(true);
             }
         });

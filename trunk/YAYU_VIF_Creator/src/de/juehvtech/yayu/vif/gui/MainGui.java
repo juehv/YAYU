@@ -114,7 +114,7 @@ public class MainGui extends javax.swing.JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evt) {
-                System.exit(0);
+                MainGui.this.dispose();
             }
         });
     }
@@ -174,7 +174,7 @@ public class MainGui extends javax.swing.JFrame {
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/juehvtech/yayu/vif/resources/vifgui_en"); // NOI18N
         jMenu3.setText(bundle.getString("mainmenu")); // NOI18N
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle(bundle.getString("app_titel")); // NOI18N
 
         detailsPanel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -648,7 +648,7 @@ public class MainGui extends javax.swing.JFrame {
     }//GEN-LAST:event_titelFieldKeyTyped
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
+        this.dispose();
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void processMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_processMenuItemActionPerformed

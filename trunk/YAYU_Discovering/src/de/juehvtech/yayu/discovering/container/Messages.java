@@ -11,14 +11,15 @@ package de.juehvtech.yayu.discovering.container;
 public final class Messages {
     private Messages(){};
     
-    public static final String GROUP = "203.0.113.0";
+    public static final int DEFAULT_PORT=2305;
+    public static final String GROUP = "224.0.0.116";
     public static final byte REQUEST = 5;
     /**
      * Answer to Request
      * Packet has the following form:
      * 6
      * length
-     * String with IP, ID, Rom Version, status (running / idle)
+     * String with ID, IP, Rom Version, status (running / idle)
      */
     public static final byte ANSWER_REQUEST = 6;
     

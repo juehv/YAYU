@@ -51,4 +51,8 @@ public class ServerInformationPackage {
     public String getStatus() {
         return status;
     }
+
+    public String getRom() {
+        return rom;
+    }
 }
