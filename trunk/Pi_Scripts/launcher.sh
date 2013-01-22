@@ -8,7 +8,7 @@
 #
 
 # Dirs
-PWD=`pwd`
+PWD="/home/pi"
 SYS_DIR=$PWD"/yayu_sys"
 USR_DIR=$PWD"/auto/yayu"
 USR_LOGFILE=$USR_DIR"/yayu.log"
@@ -85,12 +85,14 @@ then
 			start_server
 			$RM $RUN_UPLOAD
 			echo "upload done. exit." | $TEE $SYS_LOGFILE
+			$RM $ACTION_UPLOAD
 			clean_and_exit
 		fi
-	elif [ -r "$ACTION_UPDATE" ]
+	elif [ -e "$ACTION_UPDATE" ]
 	then
 		echo "found update action, start updater." | $TEE $SYS_LOGFILE
 		echo "not supported" | $TEE $SYS_LOGFILE
+		# $RM $ACTION_UPDATE
 	else
 		echo "no suitable action found." | $TEE $SYS_LOGFILE
 		clean_and_exit

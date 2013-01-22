@@ -15,6 +15,9 @@ LINK_RAW_NAME="yayu-start"
 LINK_NAME="/usr/bin/"$LINK_RAW_NAME
 CRONTAB="/etc/crontab"
 CRONTMP=$PWD"/tmp"
+MNTDIR=$PWD"/auto"
+USBDIR_NAME="yayu"
+AUTOFS_CONF="/etc/auto.yayu"
 
 # Calls
 UNTAR="tar -xzf"
@@ -30,6 +33,18 @@ function check_if_root () {
 		echo "This script must be run as root" 1>&2
 		exit 1
 	fi
+}
+
+function removeX () {
+	apt-get --yes purge xserver* x11-common x11-utils x11-xkb-utils x11-xserver-utils xarchiver xauth xkb-data console-setup xinit lightdm libx{composite,cb,cursor,damage,dmcp,ext,font,ft,i,inerama,kbfile,klavier,mu,pm,randr,render,res,t,xf86}* lxde* lx{input,menu-data,panel,polkit,randr,session,session-edit,shortcut,task,terminal} obconf openbox gtk* libgtk* alsa* python-pygame python-tk python3-tk scratch tsconf xdg-tools desktop-file-utils python3-numpy python3 python omxplayer
+	apt-get --yes autoremove
+	apt-get --yes autoclean
+	apt-get --yes clean
+}
+
+function install_tools(){
+	apt-get update
+	apt-get -y install vim htop openjdk-7-jre-headless screen autofs ntfs-3g exfat-fuse coreutils
 }
 
 function unzip_files () {
@@ -61,7 +76,7 @@ function create_links () {
 }
 
 function change_rights () {
-        $CHMOD $INSTALL_DIR
+	$CHMOD $INSTALL_DIR
 }
 
 function create_cron_tab_entry () {
@@ -74,16 +89,27 @@ function create_cron_tab_entry () {
 	$MV $CRONTMP $CRONTAB
 }
 
+function create_autofs_config (){
+	mkdir $MNTDIR
+	# wie bei crontab lösen
+	echo $MNTDIR" "$AUTOFS_CONF" --timeout=5 --ghost" >> /etc/auto.master
+	echo "yayu -fstype=ntfs,sync :/dev/disk/by-label/yayu_drive" > $AUTOFS_CONF
+}
+
 function cleanup () {
 	$RM $FILE_DIR
+	reboot
 }
 
 
 # Main
 check_if_root
+removeX
+install_tools
 unzip_files
 copy_files
 create_links
 change_rights
 create_cron_tab_entry
 cleanup
+create_autofs_config
