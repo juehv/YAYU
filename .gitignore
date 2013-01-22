@@ -161,3 +161,7 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+/trunk/YAYU_Descovering/nbproject/private/
+/trunk/YAYU_PiMS/nbproject/private/
+/trunk/YAYU_Suite/nbproject/private/
+/trunk/YAYU_Updater/nbproject/private/
