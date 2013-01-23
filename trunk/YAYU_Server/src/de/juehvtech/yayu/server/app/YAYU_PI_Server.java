@@ -15,6 +15,7 @@ import de.juehvtech.yayu.server.parsing.VideoInfoFileInterpreter;
 import de.juehvtech.yayu.server.properties.ParserTags;
 import de.juehvtech.yayu.server.properties.Properties;
 import de.juehvtech.yayu.server.upload.VideoUploadManager;
+import de.juehvtech.yayu.util.container.UserPackage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -127,18 +128,16 @@ public class YAYU_PI_Server {
                 Properties.VIDEO_DIR = config.getString(ParserTags.VIDEO_DIR);
                 Properties.VIDEO_INFO_FILE = config.getString(ParserTags.VIDEO_INFO_FILE);
                 // set username and password
-                YoutubeAccountManager.setUser(config.getString(ParserTags.USERNAME),
-                        config.getString(ParserTags.PASSWORD).toCharArray());
-                StringBuilder pwDummyString = new StringBuilder();
-                for (int i = 0; i < config.getString(ParserTags.PASSWORD).length(); i++) {
-                    pwDummyString.append("*");
-                }
+                UserPackage user = new UserPackage(config.getString(ParserTags.USERNAME),
+                        config.getString(ParserTags.PASSWORD));
+                YoutubeAccountManager.setUser(user);
+
                 Logger.getLogger(YAYU_PI_Server.class.getName())
                         .log(Level.INFO,
                         "Got the following values:\n{0}\n{1}\n{2}\n{3}",
                         new Object[]{Properties.VIDEO_DIR, Properties.VIDEO_INFO_FILE,
                             config.getString(ParserTags.USERNAME),
-                            pwDummyString.toString()});
+                            user.getPasswordDummy()});
 
             } else {
                 if (config.getBoolean(ParserTags.HELP)) {
@@ -165,7 +164,6 @@ public class YAYU_PI_Server {
                     System.err.println();
                 }
 
-                YoutubeAccountManager.clearPassword();
                 System.exit(0);
             }
 
@@ -174,7 +172,6 @@ public class YAYU_PI_Server {
                     Properties.VIDEO_DIR, Properties.VIDEO_INFO_FILE);
             if (!parser.execute()) {
                 System.err.println("Error while parsing files. See log for details!");
-                YoutubeAccountManager.clearPassword();
                 System.exit(-1);
             }
             // add videos to cache
@@ -190,16 +187,13 @@ public class YAYU_PI_Server {
             } catch (InterruptedException ex) {
                 Logger.getLogger(YAYU_PI_Server.class.getName()).log(
                         Level.SEVERE, "Failed to join upload manager", ex);
-                YoutubeAccountManager.clearPassword();
                 System.exit(-1);
             }
             System.out.println("Everything is done. Exit.");
-            YoutubeAccountManager.clearPassword();
             System.exit(0);
         } catch (JSAPException ex) {
             Logger.getLogger(YAYU_PI_Server.class.getName()).log(Level.SEVERE,
                     "Exception with commandline parser", ex);
-            YoutubeAccountManager.clearPassword();
             System.exit(-1);
         }
     }

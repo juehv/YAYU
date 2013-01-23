@@ -46,7 +46,7 @@ public class ServerCoreCopyWorker {
             out.println("-u");
             out.println(user.getUsername());
             out.println("-p");
-            out.println(user.getPassword());
+            out.println(user.getEncryptedPassword());
             out.println("-d");
             out.println("./");
             out.println("-F");

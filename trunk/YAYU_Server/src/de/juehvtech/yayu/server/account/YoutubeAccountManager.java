@@ -6,6 +6,7 @@ package de.juehvtech.yayu.server.account;
 
 import com.google.gdata.client.youtube.YouTubeService;
 import com.google.gdata.util.AuthenticationException;
+import de.juehvtech.yayu.util.container.UserPackage;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -23,18 +24,10 @@ public class YoutubeAccountManager {
     // nur einmal entsclhüsseln um footprint gering zu halten
 
     private static YoutubeAccountManager INSTANCE;
-    private static String username = null;
-    private static char[] password = null;
+    private static UserPackage user;
 
-    public static void setUser(String username, char[] password) {
-        YoutubeAccountManager.username = username;
-        YoutubeAccountManager.password = password;
-    }
-
-    public static void clearPassword() {
-        if (password != null) {
-            Arrays.fill(password, '0');
-        }
+    public static void setUser(UserPackage user) {
+        YoutubeAccountManager.user = user;
     }
 
 //    @Deprecated
@@ -52,7 +45,7 @@ public class YoutubeAccountManager {
 
     public static YoutubeAccountManager getInstance() {
         if (INSTANCE == null) {
-            if (username == null || password == null) {
+            if (user == null) {
                 // Programmierfehler
                 throw new IllegalAccessError("Set Username & Password first!");
             }
@@ -75,10 +68,11 @@ public class YoutubeAccountManager {
                     "Yet Anaoter Youtube Uploader by JUehV Tech",
                     "AI39si70rO-pab9h0paKhewSJ0SxLXvFncIlg_PlxD3yhHKcVdgbqqz"
                     + "GWZRqhvshoBJ-Ej2ELktlszVBtcgFI0Fog_YZYzlqdQ");
-            retval.setUserCredentials(username, String.copyValueOf(password));
+            retval.setUserCredentials(user.getUsername(), user.getPassword());
             return retval;
         } catch (AuthenticationException ex) {
-            Logger.getLogger(YoutubeAccountManager.class.getName()).log(Level.SEVERE, "Error while getting youtube service (wrong user data??)!", ex);
+            Logger.getLogger(YoutubeAccountManager.class.getName()).log(
+                    Level.SEVERE, "Error while getting youtube service (wrong user data??)!", ex);
         }
         return null;
     }
