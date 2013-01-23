@@ -23,13 +23,12 @@ public class TextDecrypter {
         cipher.init(Cipher.DECRYPT_MODE, key);
 
         ByteBuffer inBuf = ByteBuffer.wrap(text);
-        ByteBuffer outBuf = ByteBuffer.allocate(200);
 
         cipher.update(inBuf.array());
-        outBuf = ByteBuffer.wrap(cipher.doFinal());
+        ByteBuffer outBuf = ByteBuffer.wrap(cipher.doFinal());
         System.out.println("plain text : " + new String(outBuf.array())
                 + " bytes: " + outBuf.array().length);
-        return null;
+        return new String(outBuf.array()).toCharArray();
     }
 
     public static char[] decryptBase64(String text) throws Exception {

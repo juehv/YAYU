@@ -48,6 +48,11 @@ public class UploadWorker extends Thread {
     public void run() {
         try {
             YouTubeService service = YoutubeAccountManager.getInstance().getService();
+            if (service == null) {
+                Logger.getLogger(UploadWorker.class.getName())
+                        .severe("Got no yt service. Exit.");
+                return;
+            }
             VideoEntry newEntry = new VideoEntry();
 
             YouTubeMediaGroup mg = newEntry.getOrCreateMediaGroup();
