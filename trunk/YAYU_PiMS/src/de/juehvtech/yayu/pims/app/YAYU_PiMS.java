@@ -4,15 +4,14 @@
  */
 package de.juehvtech.yayu.pims.app;
 
-import de.juehvtech.yayu.discovering.client.DiscoveringClientFactory;
 import de.juehvtech.yayu.discovering.server.DiscoveringServer;
 import de.juehvtech.yayu.discovering.server.DiscoveringServerFactory;
 import de.juehvtech.yayu.discovering.util.IdGenerator;
-import java.awt.EventQueue;
+import de.juehvtech.yayu.util.encryption.TextEncrypter;
+import java.awt.event.TextEvent;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.java2d.loops.GraphicsPrimitive;
 
 /**
  *
@@ -23,10 +22,10 @@ public class YAYU_PiMS {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws SocketException, InterruptedException {
-        System.out.println("Code: " + (new IdGenerator().generateServerId(null)));
+    public static void main(String[] args) throws SocketException, InterruptedException, Exception {
+        System.out.println("Server-Code: " + (new IdGenerator().generateServerId(null)));
 
-
+        
         Thread main = new Thread(new Runnable() {
             @Override
             public void run() {

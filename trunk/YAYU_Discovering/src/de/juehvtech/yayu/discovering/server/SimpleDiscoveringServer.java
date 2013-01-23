@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class SimpleDiscoveringServer implements DiscoveringServer {
 
     private Thread runner;
-    private boolean running = true;
+    private boolean running = false;
     private MulticastSocket socket;
     private final String id;
     private final String ip;
@@ -59,11 +59,11 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
                     }
 
                     while (running) {
-                        DatagramPacket answer = new DatagramPacket(new byte[256], 256);
-                        socket.receive(answer);
-                        byte[] data = answer.getData();
+                        DatagramPacket request = new DatagramPacket(new byte[256], 256);
+                        socket.receive(request);
+                        byte[] data = request.getData();
                         if (data[0] == Messages.REQUEST) {
-                            socket.send(new DatagramPacket(msg, 1, group, port));
+                            socket.send(new DatagramPacket(msg, msg.length, group, port));
                         }
                     }
                 } catch (Exception ex) {

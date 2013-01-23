@@ -23,15 +23,46 @@ import java.util.logging.Logger;
  */
 class SimpleDiscoveryClient implements DiscoveringClient {
 
+    private boolean reqRunner = false;
+    private MulticastSocket socket = null;
+    private DatagramPacket req = null;
+
+    private void startRequestRunner() throws IOException {
+        if (reqRunner) {
+            return;
+        }
+        if (socket == null || req == null) {
+            return;
+        }
+        reqRunner = true;
+        Thread runner = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (reqRunner) {
+                    try {
+                        socket.send(req);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException | IOException ex) {
+                        Logger.getLogger(SimpleDiscoveryClient.class.getName())
+                                .log(Level.SEVERE, null, ex);
+                    }
+                }
+                reqRunner = false;
+            }
+        });
+        runner.start();
+    }
+
     @Override
     public ServerInformationPackage searchForServers(int port) {
         String retval = "";
         try {
             InetAddress group = Inet4Address.getByName(Messages.GROUP);
-            MulticastSocket socket = new MulticastSocket(port);
+            socket = new MulticastSocket(port);
             socket.joinGroup(group);
-            socket.send(new DatagramPacket(new byte[]{Messages.REQUEST}, 1,
-                    group, port));
+            req = new DatagramPacket(new byte[]{Messages.REQUEST}, 1, group,
+                    port);
+            startRequestRunner();
             // wait for answer
             DatagramPacket answer = new DatagramPacket(new byte[256], 256);
             // buffer can't be larger than 256 because the length fiels is only
@@ -42,6 +73,7 @@ class SimpleDiscoveryClient implements DiscoveringClient {
                 // if there is no server it will block forever
                 byte[] data = answer.getData();
                 if (data[0] == Messages.ANSWER_REQUEST) {
+                    reqRunner = false;
                     int length = (byte) data[1];
                     byte[] stringArray = new byte[length];
                     for (int i = 2; i < length + 2; i++) {

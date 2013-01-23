@@ -13,4 +13,5 @@ import de.juehvtech.yayu.discovering.container.ServerInformationPackage;
 public interface DiscoveringCallbackListener {
 
     void updateStatus(ServerInformationPackage info);
+    void resetStatus();
 }
