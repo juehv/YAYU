@@ -6,13 +6,9 @@ package de.juehvtech.yayu.util.encryption;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.nio.ByteBuffer;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -25,21 +21,16 @@ public class TextEncrypter {
         byte[] input = new String(text).getBytes();
         SecretKeySpec key = KeyLoader.loadDefaultKey();
         Cipher cipher = Cipher.getInstance("AES");
-        System.out.println("input text : " + new String(input) + " bytes: " + input.length);
-
-        // encryption pass
 
         cipher.init(Cipher.ENCRYPT_MODE, key);
         cipher.update(input);
         ByteBuffer outBuf = ByteBuffer.wrap(cipher.doFinal());
-        System.out.println("cipher text: " + new String(outBuf.array()) + " bytes: " + outBuf.array().length);
 
         return outBuf.array();
     }
 
     public static String encryptBase64(char[] text) throws Exception {
         byte[] crypt = TextEncrypter.encrypt(text);
-        System.out.println("Base 64: " + Base64.encode(crypt));
         return Base64.encode(crypt);
     }
 

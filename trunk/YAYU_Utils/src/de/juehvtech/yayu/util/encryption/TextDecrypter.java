@@ -26,8 +26,6 @@ public class TextDecrypter {
 
         cipher.update(inBuf.array());
         ByteBuffer outBuf = ByteBuffer.wrap(cipher.doFinal());
-        System.out.println("plain text : " + new String(outBuf.array())
-                + " bytes: " + outBuf.array().length);
         return new String(outBuf.array()).toCharArray();
     }
 
