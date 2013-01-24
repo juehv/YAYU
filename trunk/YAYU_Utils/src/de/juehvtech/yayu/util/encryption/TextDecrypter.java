@@ -4,12 +4,12 @@
  */
 package de.juehvtech.yayu.util.encryption;
 
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 
 /**
  *
@@ -30,7 +30,7 @@ public class TextDecrypter {
     }
 
     public static char[] decryptBase64(String text) throws Exception {
-        return TextDecrypter.decrypt(Base64.decode(text));
+        return TextDecrypter.decrypt(DatatypeConverter.parseBase64Binary(text));
     }
 
     public static char[] decryptBase64IgnoreError(String text) {
