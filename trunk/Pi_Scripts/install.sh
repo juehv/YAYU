@@ -7,7 +7,7 @@
 
 # Variables
 PWD=`pwd`
-TAR_NAME=$PWD"/yayu_launcher.tgz"
+TAR_NAME=$PWD"/yayu_launcher.tar"
 FILE_DIR=$PWD"/YAYU_Launcher"
 INSTALL_DIR="/usr/lib/YAYU_Launcher"
 LINK_SRC=$INSTALL_DIR"/yayu_screen_wrapper.sh"
@@ -20,7 +20,7 @@ USBDIR_NAME="yayu"
 AUTOFS_CONF="/etc/auto.yayu"
 
 # Calls
-UNTAR="tar -xzf"
+UNTAR="tar -xf"
 LN="ln -s"
 MV="mv"
 CHMOD="chmod -R 755"

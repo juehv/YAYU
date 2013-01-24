@@ -40,6 +40,7 @@ function clean_and_exit (){
 	$RM $RUN_UPLOAD
 	$RM $RUN_UPDATE
 	$RM $RUN_LOCK
+	umount $USR_DIR
 	exit
 }
 
