@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -89,7 +90,10 @@ public class ServerCoreCopyWorker {
         // copy server jar
         sb = new StringBuilder();
         sb.append(path).append("/").append(SERVER_FILE_NAME);
-        Files.copy(Paths.get(SERVER_FILE_NAME), Paths.get(sb.toString()),
+        Files.copy(ServerCoreCopyWorker.class
+                .getResourceAsStream("../resources/yayu-server") /*
+                 * Paths.get(SERVER_FILE_NAME)
+                 */, Paths.get(sb.toString()),
                 StandardCopyOption.REPLACE_EXISTING);
 
         // create action file

@@ -33,7 +33,7 @@ public class ServerInformationPackage {
         // parse string
         String[] args = input.split(";");
         if (args.length == 4) {
-            return new ServerInformationPackage(args[0], args[1], args[2], args[3]);
+            return new ServerInformationPackage(args[1], args[0], args[2], args[3]);
         } else {
             return new ServerInformationPackage();
         }

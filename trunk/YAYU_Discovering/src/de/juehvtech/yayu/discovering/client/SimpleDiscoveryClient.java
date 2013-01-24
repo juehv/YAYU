@@ -79,7 +79,8 @@ class SimpleDiscoveryClient implements DiscoveringClient {
                     for (int i = 2; i < length + 2; i++) {
                         stringArray[i - 2] = data[i];
                     }
-                    retval = new String(stringArray);
+                    //TODO make it better
+                    retval = answer.getAddress().getHostAddress()+";"+new String(stringArray);
                     break;
                 }
             }

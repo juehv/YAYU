@@ -24,15 +24,13 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
     private boolean running = false;
     private MulticastSocket socket;
     private final String id;
-    private final String ip;
     private final String rom;
     private final int port;
     private byte[] msg;
     private String status = "unknown";
 
-    public SimpleDiscoveringServer(String ip, String rom, int port) {
+    public SimpleDiscoveringServer(String rom, int port) {
         this.id = new IdGenerator().generateServerId(null);
-        this.ip = ip;
         this.rom = rom;
         this.port = port;
     }
@@ -79,7 +77,7 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
     }
 
     private void buildMsg() {
-        String msgString = id + ";" + ip + ";" + rom + ";" + status;
+        String msgString = id + ";" + rom + ";" + status;
         msg = new byte[msgString.length() + 2];
         msg[0] = Messages.ANSWER_REQUEST;
         msg[1] = (byte) msgString.length();

@@ -13,7 +13,6 @@ import java.awt.Desktop;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -154,7 +153,7 @@ public class MainGuiControl {
             return videoList;
         }
         VideoInfo video = new VideoInfo(path, titel, tags, description,
-                MIMEType.fromFileExtention(path.substring(path.lastIndexOf('.'))),
+                MIMEType.fromFileExtention(path.substring(path.lastIndexOf('.') + 1)),
                 category);
         //make shure that there are no double saves
         //videoDataList.remove(video);
