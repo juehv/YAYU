@@ -53,7 +53,7 @@ public class VideoInfoFileInterpreter {
             if (reader.readHeaders()) {
                 version = reader.getHeaders();
                 if (version[0].equalsIgnoreCase("version")) {
-                    LOG.log(Level.WARNING, "Found document version: {0}", version[1]);
+                    LOG.log(Level.INFO, "Found document version: {0}", version[1]);
                     //TODO version checker
                 }
             } else {
