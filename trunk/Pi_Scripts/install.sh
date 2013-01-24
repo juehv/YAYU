@@ -92,8 +92,8 @@ function create_cron_tab_entry () {
 function create_autofs_config (){
 	mkdir $MNTDIR
 	# wie bei crontab lösen
-	echo $MNTDIR" "$AUTOFS_CONF" --timeout=5 --ghost" >> /etc/auto.master
-	echo "yayu -fstype=ntfs,sync :/dev/disk/by-label/yayu_drive" > $AUTOFS_CONF
+	echo $MNTDIR" "$AUTOFS_CONF" --timeout=1 --ghost" >> /etc/auto.master
+	echo "yayu -fstype=auto,sync :/dev/disk/by-label/yayu_drive" > $AUTOFS_CONF
 }
 
 function cleanup () {

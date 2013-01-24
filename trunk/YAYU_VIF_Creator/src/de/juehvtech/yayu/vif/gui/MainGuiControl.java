@@ -4,6 +4,7 @@
  */
 package de.juehvtech.yayu.vif.gui;
 
+import de.juehvtech.yayu.util.container.MIMEType;
 import de.juehvtech.yayu.util.container.UserPackage;
 import de.juehvtech.yayu.util.container.VideoInfo;
 import de.juehvtech.yayu.vif.export.ExportListener;
@@ -12,6 +13,7 @@ import java.awt.Desktop;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -111,11 +113,28 @@ public class MainGuiControl {
     }
 
     public String performBrowseAction(String startPath) {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(); // this line may block a while
         if (!startPath.isEmpty()) {
             fileChooser.setCurrentDirectory(new File(startPath)
                     .getAbsoluteFile());
         }
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                String mime = f.getName().toLowerCase();
+                for (MIMEType type : MIMEType.values()) {
+                    if (mime.endsWith("." + type.getFileExtention())) {
+                        return true;
+                    }
+                }
+                return f.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return "Supported Video Files";
+            }
+        });
         int result = fileChooser.showOpenDialog(parent);
         if (result == JFileChooser.CANCEL_OPTION) {
             return null;
@@ -134,12 +153,9 @@ public class MainGuiControl {
                     JOptionPane.WARNING_MESSAGE);
             return videoList;
         }
-        VideoInfo video = new VideoInfo();
-        video.setFileName(path);
-        video.setVideoTitel(titel);
-        video.setVideoTags(tags);
-        video.setCategory(category);
-        video.setVideoText(description);
+        VideoInfo video = new VideoInfo(path, titel, tags, description,
+                MIMEType.fromFileExtention(path.substring(path.lastIndexOf('.'))),
+                category);
         //make shure that there are no double saves
         //videoDataList.remove(video);
         // make shure that there are no entrys with the same file
@@ -168,12 +184,8 @@ public class MainGuiControl {
                 return presetDataList.keySet().toArray(new String[0]);
             }
         }
-        VideoInfo video = new VideoInfo();
-        video.setFileName("");
-        video.setVideoTitel(titel);
-        video.setVideoTags(tags);
-        video.setCategory(category);
-        video.setVideoText(description);
+        VideoInfo video = new VideoInfo("", titel, tags, description,
+                MIMEType.UNSET, category);
 
         presetDataList.put(presetName, video);
         savePresets();
@@ -187,11 +199,9 @@ public class MainGuiControl {
                 bundle.getString("dialog_confirm_delete"),
                 JOptionPane.YES_NO_OPTION);
         if (result == JOptionPane.YES_OPTION) {
-            VideoInfo video = new VideoInfo();
-            video.setFileName(path);
-            video.setVideoTitel(titel);
-            video.setVideoTags(tags);
-            video.setVideoText(description);
+
+            VideoInfo video = new VideoInfo(path, titel, tags, description,
+                    null, null);
 
             videoDataList.remove(video);
             updateVideoList();

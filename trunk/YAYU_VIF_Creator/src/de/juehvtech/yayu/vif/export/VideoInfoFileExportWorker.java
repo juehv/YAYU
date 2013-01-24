@@ -73,7 +73,7 @@ public class VideoInfoFileExportWorker {
                         video.getVideoTitel(), video.getVideoTags(),
                         descriptionFileNames.get(i), video.getPrivacy().toString(),
                         video.getLicense().toString(), video.getCategory(),
-                        video.getFileName().substring(video.getFileName().lastIndexOf(".")),
+                        video.getType().getFileExtention(),
                         "noChecksumSupported"});
         }
         // close writer

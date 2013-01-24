@@ -10,19 +10,29 @@ import java.io.Serializable;
  *
  * @author Jens
  */
-public class VideoInfo implements Serializable{
+public class VideoInfo implements Serializable {
 
-    private String fileName;
-    private String videoTitel;
-    private String videoTags;
+    private final String fileName;
+    private final String videoTitel;
+    private final String videoTags;
     private String videoText;
+    private final MIMEType type;
+    private final String category;
     private boolean textResolved = false;
     private boolean videoFileChecked = false; // add checksum
     //TODO implement following funtions
     private Privacy privacy = Privacy.PRIVATE;
     private License license = License.STD;
-    private MIMEType type = MIMEType.MP4;
-    private String category = "Games";
+
+    public VideoInfo(String fileName, String videoTitel, String videoTags, 
+            String videoText, MIMEType type, String category) {
+        this.fileName = fileName;
+        this.videoTitel = videoTitel;
+        this.videoTags = videoTags;
+        this.videoText = videoText;
+        this.type = type;
+        this.category = category;
+    }
 
     // old fields
 //    private String title;
@@ -49,32 +59,16 @@ public class VideoInfo implements Serializable{
         return fileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public String getVideoTitel() {
         return videoTitel;
-    }
-
-    public void setVideoTitel(String videoTitel) {
-        this.videoTitel = videoTitel;
     }
 
     public String getVideoTags() {
         return videoTags;
     }
 
-    public void setVideoTags(String videoTags) {
-        this.videoTags = videoTags;
-    }
-
     public String getVideoText() {
         return videoText;
-    }
-
-    public void setVideoText(String videoText) {
-        this.videoText = videoText;
     }
 
     public boolean isTextResolved() {
@@ -113,16 +107,12 @@ public class VideoInfo implements Serializable{
         return type;
     }
 
-    public void setType(MIMEType type) {
-        this.type = type;
-    }
-
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setVideoText(String videoText) {
+        this.videoText = videoText;
     }
 
     @Override
@@ -131,6 +121,7 @@ public class VideoInfo implements Serializable{
             return false;
         }
         VideoInfo tmp = (VideoInfo) o;
+        // only check titel, text, tags and filepath
         if (tmp.getVideoTitel() == null ? this.getVideoTitel() == null
                 : tmp.getVideoTitel().equals(this.getVideoTitel())
                 && (tmp.getVideoTags() == null ? this.getVideoTags() == null

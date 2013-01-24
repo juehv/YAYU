@@ -1439,17 +1439,17 @@ is divided into following sections:
     
     <target name="-unjar-and-copy-lib-jars">
         <unjar dest="${build.classes.dir}">
-            <fileset dir="lib">
+            <fileset dir="dist/lib">
                 <include name="**/*.jar"/>
             </fileset>
             <patternset>
                 <exclude name="META-INF/**"/>
-                <exclude name="/*"/>
+               <exclude name="/*"/>
             </patternset>
         </unjar>
     </target>
 
-    <target depends="init,compile,-pre-pre-jar,-pre-jar,-unjar-and-copy-lib-jars" name="fat-jar">
+    <target depends="-unjar-and-copy-lib-jars" name="fat-jar">
         <property location="${build.classes.dir}" name="build.classes.dir.resolved"/>
         <jar destfile="${dist.jar}">
             <fileset dir="${build.classes.dir}"/>
@@ -1462,5 +1462,5 @@ is divided into following sections:
         <echo>java -jar "${dist.jar.resolved}"</echo>
     </target>
 
-    <target depends="clean,fat-jar" name="clean-and-fat-jar"/>
+    <target depends="clean,jar,fat-jar" name="clean-and-fat-jar"/>
 </project>

@@ -5,6 +5,7 @@
 package de.juehvtech.yayu.server.parsing;
 
 import com.csvreader.CsvReader;
+import de.juehvtech.yayu.util.container.MIMEType;
 import de.juehvtech.yayu.util.container.VideoInfo;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -84,22 +85,21 @@ public class VideoInfoFileInterpreter {
     private boolean interpretValues(List<String[]> values) {
         try {
             for (String[] item : values) {
-                VideoInfo container = new VideoInfo();
                 if (item[0].isEmpty()) {
                     LOG.severe("Empty video file path!");
                     return false;
                 }
-                container.setFileName(filePath + "/" + item[0]);
-                container.setVideoTitel(item[1]);
-                container.setVideoTags(item[2]);
+                VideoInfo container = new VideoInfo(filePath + "/" + item[0],
+                        item[1], item[2], "",
+                        MIMEType.fromFileExtention(item[7]),
+                        item[6]);
                 if (item[3].isEmpty()) {
                     container.setTextResolved(true);
-                    container.setVideoText("");
                 } else {
                     container.setVideoText(filePath + "/" + item[3]);
                 }
-                videoInfos.add(container);
 
+                videoInfos.add(container);
                 LOG.info(container.toString());
             }
             return true;

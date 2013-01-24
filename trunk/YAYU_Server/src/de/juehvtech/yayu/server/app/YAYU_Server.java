@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  *
  * @author Jens
  */
-public class YAYU_PI_Server {
+public class YAYU_Server {
 
     /**
      * @param args the command line arguments
@@ -46,7 +46,7 @@ public class YAYU_PI_Server {
                 }
 
             } catch (IOException ex) {
-                Logger.getLogger(YAYU_PI_Server.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(YAYU_Server.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         try {
@@ -132,7 +132,7 @@ public class YAYU_PI_Server {
                         config.getString(ParserTags.PASSWORD));
                 YoutubeAccountManager.setUser(user);
 
-                Logger.getLogger(YAYU_PI_Server.class.getName())
+                Logger.getLogger(YAYU_Server.class.getName())
                         .log(Level.INFO,
                         "Got the following values:\n{0}\n{1}\n{2}\n{3}",
                         new Object[]{Properties.VIDEO_DIR, Properties.VIDEO_INFO_FILE,
@@ -156,7 +156,7 @@ public class YAYU_PI_Server {
                     for (String arg : args) {
                         argstring += "\"" + arg + "\", ";
                     }
-                    Logger.getLogger(YAYU_PI_Server.class.getName())
+                    Logger.getLogger(YAYU_Server.class.getName())
                             .log(Level.WARNING, "No correct commandline parameter:\n {0}", argstring);
                     System.err.println();
                     // TODO correct name
@@ -185,14 +185,14 @@ public class YAYU_PI_Server {
             try {
                 uploadManager.join();
             } catch (InterruptedException ex) {
-                Logger.getLogger(YAYU_PI_Server.class.getName()).log(
+                Logger.getLogger(YAYU_Server.class.getName()).log(
                         Level.SEVERE, "Failed to join upload manager", ex);
                 System.exit(-1);
             }
             System.out.println("Everything is done. Exit.");
             System.exit(0);
         } catch (JSAPException ex) {
-            Logger.getLogger(YAYU_PI_Server.class.getName()).log(Level.SEVERE,
+            Logger.getLogger(YAYU_Server.class.getName()).log(Level.SEVERE,
                     "Exception with commandline parser", ex);
             System.exit(-1);
         }
