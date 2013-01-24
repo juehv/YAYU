@@ -27,6 +27,8 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
     private final String ip;
     private final String rom;
     private final int port;
+    private byte[] msg;
+    private String status = "unknown";
 
     public SimpleDiscoveringServer(String ip, String rom, int port) {
         this.id = new IdGenerator().generateServerId(null);
@@ -49,14 +51,7 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
                     socket = new MulticastSocket(port);
                     socket.joinGroup(group);
                     // build msg
-                    String msgString = id + ";" + ip + ";" + rom + ";" + "unknown";
-                    byte[] msg = new byte[msgString.length() + 2];
-                    msg[0] = Messages.ANSWER_REQUEST;
-                    msg[1] = (byte) msgString.length();
-                    int i = 2;
-                    for (byte b : msgString.getBytes()) {
-                        msg[i++] = b;
-                    }
+                    buildMsg();
 
                     while (running) {
                         DatagramPacket request = new DatagramPacket(new byte[256], 256);
@@ -77,9 +72,26 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
     @Override
     public void shutdownServer() {
         running = false;
-        if (socket != null && !socket.isClosed()){
+        if (socket != null && !socket.isClosed()) {
             socket.close();
         }
-    
+
+    }
+
+    private void buildMsg() {
+        String msgString = id + ";" + ip + ";" + rom + ";" + status;
+        msg = new byte[msgString.length() + 2];
+        msg[0] = Messages.ANSWER_REQUEST;
+        msg[1] = (byte) msgString.length();
+        int i = 2;
+        for (byte b : msgString.getBytes()) {
+            msg[i++] = b;
+        }
+    }
+
+    @Override
+    public void rebuildMsg(String status) {
+        this.status = status;
+        buildMsg();
     }
 }

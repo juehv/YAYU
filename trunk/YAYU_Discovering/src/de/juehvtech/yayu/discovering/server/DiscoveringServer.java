@@ -11,4 +11,5 @@ package de.juehvtech.yayu.discovering.server;
 public interface DiscoveringServer {
     void startServer();
     void shutdownServer();
+    void rebuildMsg(String status);
 }

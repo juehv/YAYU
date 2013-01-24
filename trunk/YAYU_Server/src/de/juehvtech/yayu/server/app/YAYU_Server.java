@@ -14,6 +14,9 @@ import de.juehvtech.yayu.util.container.VideoInfo;
 import de.juehvtech.yayu.server.parsing.VideoInfoFileInterpreter;
 import de.juehvtech.yayu.server.properties.ParserTags;
 import de.juehvtech.yayu.server.properties.Properties;
+import de.juehvtech.yayu.server.reporting.LocalPiMSConnector;
+import de.juehvtech.yayu.server.reporting.MetaDataListener;
+import de.juehvtech.yayu.server.reporting.ProgressListener;
 import de.juehvtech.yayu.server.upload.VideoUploadManager;
 import de.juehvtech.yayu.util.container.UserPackage;
 import java.io.IOException;
@@ -31,10 +34,14 @@ import java.util.logging.Logger;
  */
 public class YAYU_Server {
 
+    public static final String versionString = "0.1 BETA";
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        MetaDataListener meta = LocalPiMSConnector.getInstance();
+        meta.registerServer(versionString);
         if (args.length == 0 || (args.length == 1 && args[0].isEmpty())) {
             try {
                 //  load from file
@@ -163,15 +170,21 @@ public class YAYU_Server {
                     System.err.println("Usage: yayu-server " + jsap.getUsage());
                     System.err.println();
                 }
-
+                meta.unregisterServer();
                 System.exit(0);
             }
+
+
+            ProgressListener progress = LocalPiMSConnector.getInstance();
+            progress.reportStatus("running");
 
             // Parse video info file
             VideoInfoFileInterpreter parser = new VideoInfoFileInterpreter(
                     Properties.VIDEO_DIR, Properties.VIDEO_INFO_FILE);
             if (!parser.execute()) {
                 System.err.println("Error while parsing files. See log for details!");
+                meta.unregisterServer();
+                meta.unregisterServer();
                 System.exit(-1);
             }
             // add videos to cache
@@ -187,13 +200,16 @@ public class YAYU_Server {
             } catch (InterruptedException ex) {
                 Logger.getLogger(YAYU_Server.class.getName()).log(
                         Level.SEVERE, "Failed to join upload manager", ex);
+                meta.unregisterServer();
                 System.exit(-1);
             }
             System.out.println("Everything is done. Exit.");
+            meta.unregisterServer();
             System.exit(0);
         } catch (JSAPException ex) {
             Logger.getLogger(YAYU_Server.class.getName()).log(Level.SEVERE,
                     "Exception with commandline parser", ex);
+            meta.unregisterServer();
             System.exit(-1);
         }
     }
