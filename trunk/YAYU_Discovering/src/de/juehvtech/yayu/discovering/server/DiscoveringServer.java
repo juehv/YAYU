@@ -12,4 +12,5 @@ public interface DiscoveringServer {
     void startServer();
     void shutdownServer();
     void rebuildMsg(String status);
+    void joinServerThread();
 }

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author Jens
  */
 public class SimpleDiscoveringServer implements DiscoveringServer {
-
+    
     private Thread runner;
     private boolean running = false;
     private MulticastSocket socket;
@@ -28,13 +28,13 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
     private final int port;
     private byte[] msg;
     private String status = "unknown";
-
+    
     public SimpleDiscoveringServer(String rom, int port) {
         this.id = new IdGenerator().generateServerId(null);
         this.rom = rom;
         this.port = port;
     }
-
+    
     @Override
     public void startServer() {
         if (running) {
@@ -50,7 +50,7 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
                     socket.joinGroup(group);
                     // build msg
                     buildMsg();
-
+                    
                     while (running) {
                         DatagramPacket request = new DatagramPacket(new byte[256], 256);
                         socket.receive(request);
@@ -66,16 +66,18 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
         });
         runner.start();
     }
-
+    
     @Override
     public void shutdownServer() {
         running = false;
         if (socket != null && !socket.isClosed()) {
             socket.close();
         }
-
+        Logger.getLogger(SimpleDiscoveringServer.class.getName())
+                .info("Shutdown complete.");
+        
     }
-
+    
     private void buildMsg() {
         String msgString = id + ";" + rom + ";" + status;
         msg = new byte[msgString.length() + 2];
@@ -86,10 +88,22 @@ public class SimpleDiscoveringServer implements DiscoveringServer {
             msg[i++] = b;
         }
     }
-
+    
     @Override
     public void rebuildMsg(String status) {
         this.status = status;
         buildMsg();
+    }
+    
+    @Override
+    public void joinServerThread() {
+        try {
+            if (runner != null) {
+                runner.join();
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SimpleDiscoveringServer.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }
 }
