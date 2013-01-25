@@ -11,8 +11,11 @@ TAR_NAME=$PWD"/yayu_launcher.tar"
 FILE_DIR=$PWD"/YAYU_Launcher"
 INSTALL_DIR="/usr/lib/YAYU_Launcher"
 LINK_SRC=$INSTALL_DIR"/yayu_screen_wrapper.sh"
+JAR_LINK_SRC=$INSTALL_DIR"/jar2sh"
 LINK_RAW_NAME="yayu-start"
 LINK_NAME="/usr/bin/"$LINK_RAW_NAME
+JAR_LINK_RAW_NAME="jar2sh"
+JAR_LINK_NAME="/usr/bin/"$JAR_LINK_RAW_NAME
 CRONTAB="/etc/crontab"
 CRONTMP=$PWD"/tmp"
 MNTDIR=$PWD"/auto"
@@ -72,6 +75,13 @@ function create_links () {
 		rm -f $LINK_NAME
 	fi
 	$LN $LINK_SRC $LINK_RAW_NAME
+	
+	if [ -e "$JAR_LINK_NAME" ]
+	then
+		rm -f $JAR_LINK_NAME
+	fi
+	$LN $JAR_LINK_SRC $JAR_LINK_RAW_NAME
+	
 	cd $PWD
 }
 
