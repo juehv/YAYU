@@ -22,6 +22,7 @@ import javax.swing.ProgressMonitor;
  */
 public class ExportManager {
 
+    private static final String ACTION_FOLDER = "upload";
     private String error = "No Errors";
     private final ProgressMonitor monitor;
     private final ExportListener listener;
@@ -39,13 +40,20 @@ public class ExportManager {
             public void run() {
                 monitor.setProgress(5);
                 monitor.setNote("Init...");
+                // create action folder
+                String actionDir = saveDir + "/" + ACTION_FOLDER;
+                if (!new File(actionDir).mkdirs()) {
+                    listener.error("Error while creating action dir.");
+                    monitor.close();
+                    return;
+                }
                 // start file video file copy in background
                 List<String> videoFiles = new ArrayList<>();
                 for (VideoInfo video : videos) {
                     videoFiles.add(video.getFileName());
                 }
                 Thread videoCopyWorker = new Thread(new VideoCopyWorker(listener,
-                        videoFiles, saveDir));
+                        videoFiles, actionDir));
                 videoCopyWorker.start();
                 // create decription files
                 monitor.setProgress(10);
@@ -55,7 +63,7 @@ public class ExportManager {
                     descriptions.add(video.getVideoText());
                 }
                 try {
-                    DescriptionExportWorker.writeDescription(saveDir, descriptions);
+                    DescriptionExportWorker.writeDescription(actionDir, descriptions);
                 } catch (IOException ex) {
                     listener.error(ex.getMessage());
                     monitor.close();
@@ -66,7 +74,7 @@ public class ExportManager {
                 monitor.setProgress(20);
                 monitor.setNote("Create .vif file...");
                 VideoInfoFileExportWorker vifExporter =
-                        new VideoInfoFileExportWorker(saveDir);
+                        new VideoInfoFileExportWorker(actionDir);
                 try {
                     vifExporter.writeVideoInfoFile(videos);
                 } catch (IOException ex) {
@@ -78,7 +86,7 @@ public class ExportManager {
 
                 // copy server
                 try {
-                    ServerCoreCopyWorker.writeScriptsAndCopy(saveDir, user);
+                    ServerCoreCopyWorker.writeScriptsAndCopy(actionDir, user);
                 } catch (IOException ex) {
                     listener.error(ex.getMessage());
                     monitor.close();

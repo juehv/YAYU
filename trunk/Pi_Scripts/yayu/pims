@@ -1,0 +1,295 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          skeleton
+# Required-Start:    $remote_fs $syslog $network
+# Required-Stop:     $remote_fs $syslog $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Java Daemon Script
+# Description:       This file should be used to construct scripts to be
+#                    placed in /etc/init.d.
+### END INIT INFO
+#
+# License: GPLv3
+#
+# Author: Jens Heuschkel <jens@3und20.eu>
+#
+
+# Do NOT "set -e"
+
+# PATH should only include /usr/* if it runs after the mountnfs.sh script
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ 
+APP_NAME="PiMS"
+APP_LONG_NAME="Pi Management Server"
+ 
+#the location of the pid files.
+PIDDIR="/var/run"
+PIDFILE="${PIDDIR}/${APP_NAME}.pid"
+TIMESTAMP=$( date +%Y%m%d_%H%M%S )
+ 
+#number of seconds to wait after starting up.
+WAIT_AFTER_STARTUP=2
+ 
+#the location of the log files
+LOG_DIR="/var/log"
+STDOUT="${LOG_DIR}/${APP_NAME}.stdout.log"
+ 
+#PURGE_EXPRESSION="-mtime +2"
+PURGE_EXPRESSION="${LOG_DIR}/${APP_NAME}*"
+
+HEAPSIZE_INIT=16
+HEAPSIZE_MAX=100 
+VMARGS="-Xms${HEAPSIZE_INIT}M -Xmx${HEAPSIZE_MAX}M -verbose:gc"
+MAINCLASS="com.wordpress.jensheuschkel.MyApplication"
+JARFILE="YAYU_PiMS.jar"
+ARGS=""
+JAVA_COMMAND="/usr/bin/java"
+WORKING_DIR="/opt/yayu"
+
+# Startup with Classpath
+#START_COMMAND="${JAVA_COMMAND} $VMARGS $MAINCLASS $ARGS"
+# Startup with jar 
+START_COMMAND="${JAVA_COMMAND} $VMARGS -jar ${JARFILE} ${ARGS}"
+#-----------------------------------------------------------------------------
+# Do not modify anything beyond this point
+#-----------------------------------------------------------------------------
+
+checkroot() {
+ if [ $(id -u) -ne 0 ] 
+ then
+  echo "This script must be run as root" 1>&2
+  exit 1
+ fi
+}
+ 
+getpid() {
+  pid=""
+  if [ -f "$PIDFILE" ]
+  then
+    if [ -r "$PIDFILE" ]
+    then
+      pid=`cat "$PIDFILE"|cut -d: -f1`
+      host=`cat "$PIDFILE"|cut -d: -f2`
+      currhost=`hostname`
+      if [ "$host" != "$currhost" ]
+      then
+       echo "You are on the wrong host. $APP_LONG_NAME runs on $host."
+       exit 1
+      fi
+ 
+      if [ "X$pid" != "X" ]
+      then
+       kill -0 $pid > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then
+   # Process doesn't exist, so remove pidfile
+   rm -f "$PIDFILE"
+            echo "Removed stale pid file: $PIDFILE"
+   pid=""
+  fi
+      fi
+    else
+      echo "Cannot read $PIDFILE."
+      exit 1
+    fi
+  fi
+}
+ 
+#tests if the pid is alive
+testpid() {
+  kill -0 $pid > /dev/null 2>&1
+  if [ $? -ne 0 ]
+  then
+   # Process is gone so remove the pid file.
+ rm -f "$PIDFILE"
+ pid=""
+  fi
+}
+ 
+start() {
+  echo "Starting $APP_LONG_NAME..."
+  getpid
+  if [ "X$pid" = "X" ]
+  then
+    if [ -s $STDOUT ]
+    then
+     #backup current file
+     mv $STDOUT $STDOUT.sav.${TIMESTAMP}
+    fi
+    echo CLASSPATH is $CLASSPATH > $STDOUT
+    echo ${START_COMMAND} >> $STDOUT
+    nohup ${START_COMMAND} >> $STDOUT 2>&1 &
+    echo $!:`hostname` > $PIDFILE
+  else
+    echo "$APP_LONG_NAME is already running."
+    exit 1
+  fi
+ 
+  # Sleep for a few seconds to allow for intialization if required
+  # then test to make sure we're still running.
+  i=0
+  while [ $i -lt $WAIT_AFTER_STARTUP ]
+  do
+    sleep 1
+    i=`expr $i + 1`
+  done
+  if [ $WAIT_AFTER_STARTUP -gt 0 ]
+  then
+    getpid
+    if [ "X$pid" = "X" ]
+    then
+      echo "WARNING: $APP_LONG_NAME may have failed to start."
+      exit 1
+    else
+      echo "running ($pid)."
+    fi
+  else
+    echo ""
+  fi
+}
+ 
+ 
+stopit() {
+ 
+  echo "Stopping $APP_LONG_NAME..."
+  getpid
+  if [ "X$pid" = "X" ]
+  then
+    echo "$APP_LONG_NAME was not running."
+  else
+    # Running so try to stop it.
+    kill $pid
+    if [ $? -ne 0 ]
+    then
+      echo "Unable to stop $APP_LONG_NAME."
+      exit 1
+    fi
+ 
+    #  If it has not stopped in 10 tries, forcibly kill it
+    savepid=$pid
+    CNT=0
+    TOTCNT=0
+    while [ "X$pid" != "X" ]
+    do
+      # Show a waiting message every 5 seconds.
+      if [ "$CNT" -lt "5" ]
+      then
+        CNT=`expr $CNT + 1`
+      else
+        echo "Waiting for $APP_LONG_NAME to exit..."
+        CNT=0
+      fi
+ 
+      if [ $TOTCNT -gt 11 ]
+      then
+       echo "Killing by force (kill -9)"
+       kill -9 $pid
+      fi
+ 
+      TOTCNT=`expr $TOTCNT + 1`
+      sleep 1
+ 
+      testpid
+    done
+ 
+    pid=$savepid
+    testpid
+    if [ "X$pid" != "X" ]
+    then
+      echo "Failed to stop $APP_LONG_NAME."
+      exit 1
+    else
+      echo "Stopped $APP_LONG_NAME."
+    fi
+  fi
+}
+ 
+purge() {
+#  pcmd="find $LOG_DIR -follow -type f $PURGE_EXPRESSION -print -exec rm -f {} +"
+  pcmd="rm -f ${PURGE_EXPRESSION}"
+  echo "Running purge: $pcmd"
+  $pcmd
+}
+ 
+alert() {
+  if [ "X$EMAIL" != "X" ]
+  then
+   echo "$APP_LONG_NAME is not running on `hostname`. Please check and restart." \
+   | mailx -s "`hostname`: $APP_LONG_NAME is not running" "$EMAIL"
+   echo "Sent alert to $EMAIL"
+  fi
+}
+ 
+status() {
+  getpid
+  if [ "X$pid" = "X" ]
+  then
+    echo "$APP_LONG_NAME is not running."
+    alert
+    exit 1
+  else
+    echo "$APP_LONG_NAME is running (PID:$pid)."
+    exit 0
+  fi
+}
+ 
+dump() {
+  echo "Dumping $APP_LONG_NAME..."
+  getpid
+  if [ "X$pid" = "X" ]
+  then
+    echo "$APP_LONG_NAME is not running."
+  else
+    kill -3 $pid
+ 
+    if [ $? -ne 0 ]
+    then
+      echo "Failed to dump $APP_LONG_NAME."
+      exit 1
+    else
+      echo "Dumped $APP_LONG_NAME."
+    fi
+  fi
+}
+ 
+####################
+
+checkroot
+#echo "Go to ${WORKING_DIR}"
+cd $WORKING_DIR
+
+case "$1" in
+ 
+  'start')
+    start
+    ;;
+ 
+  'stop')
+    stopit
+    ;;
+ 
+  'restart')
+    stopit
+    start
+    ;;
+ 
+  'status')
+    status
+    ;;
+ 
+  'dump')
+    dump
+    ;;
+ 
+  'purge')
+    purge
+    ;;
+ 
+  *)
+    echo "Usage: $0 { start | stop | restart | status | dump | purge }"
+    exit 1
+    ;;
+esac
+ 
+exit 0

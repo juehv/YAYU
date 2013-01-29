@@ -1,0 +1,24 @@
+ps -eo pcpu | awk ' {cpu_load+=$1} END {print cpu_load}'
+
+ps -eo pcpu,pid -o comm= | sort -k1 -n -r | head -1 | awk '{ print $1 }'
+
+cat /proc/loadavg
+
+cat /proc/meminfo
+TOTAL=$(cat /proc/meminfo | cut -c 15-25 | head -n 1 | tr -d [:blank:] )
+FREE=$(cat /proc/meminfo | cut -c 15-25 | head -n 2 | tail -n 1 | tr -d [:blank:] )
+
+echo $((FREE/1024))/$((TOTAL/1024))
+
+cat /proc/cpuinfo
+
+echo "********************************"
+#CPU
+LOAD=$(ps -eo pcpu | awk ' {cpu_load+=$1} END {print cpu_load}')
+FREQ=$(cat /proc/cpuinfo | cut -c 11-20 | head -n 2 | tail -n 1 | tr -d [:blank:] )
+echo "${LOAD}%/${FREQ}MHz"
+
+#MEM
+TOTAL=$(cat /proc/meminfo | cut -c 15-25 | head -n 1)
+FREE=$(cat /proc/meminfo | cut -c 15-25 | head -n 2 | tail -n 1)
+echo "$((FREE/1024))MB/$((TOTAL/1024))MB"

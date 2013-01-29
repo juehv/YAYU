@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ResourceBundle;
 
 /**
  *
@@ -25,8 +24,8 @@ public class ServerCoreCopyWorker {
 //    public static final String SCRIPT_FILE_NAME = "start_upload.sh";
 //    public static final String LAUNCHER_FILE_NAME = "launcher.sh";
     public static final String ARG_FILE_NAME = "args";
-    public static final String SERVER_FILE_NAME = "yayu-server";
-    public static final String ACTION_FILE_NAME = "actionUpload";
+    public static final String SERVER_FILE_NAME = "YAYU_Uploader.jar";
+//    public static final String ACTION_FILE_NAME = "actionUpload";
 
     public static void writeScriptsAndCopy(final String path,
             final UserPackage user)
@@ -91,16 +90,16 @@ public class ServerCoreCopyWorker {
         sb = new StringBuilder();
         sb.append(path).append("/").append(SERVER_FILE_NAME);
         Files.copy(ServerCoreCopyWorker.class
-                .getResourceAsStream("../resources/yayu-server") /*
+                .getResourceAsStream("../resources/YAYU_Uploader.jar") /*
                  * Paths.get(SERVER_FILE_NAME)
                  */, Paths.get(sb.toString()),
                 StandardCopyOption.REPLACE_EXISTING);
-
-        // create action file
-        sb = new StringBuilder();
-        sb.append(path).append("/").append(ACTION_FILE_NAME);
-        // Touches the file.
-        new FileWriter(sb.toString()).close();
+// not needed with new launcher
+//        // create action file
+//        sb = new StringBuilder();
+//        sb.append(path).append("/").append(ACTION_FILE_NAME);
+//        // Touches the file.
+//        new FileWriter(sb.toString()).close();
 
     }
 }

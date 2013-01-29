@@ -1,0 +1,8 @@
+-u
+USER
+-p
+PASSWORD
+-d
+E:/
+-F
+videoInfos.vif
