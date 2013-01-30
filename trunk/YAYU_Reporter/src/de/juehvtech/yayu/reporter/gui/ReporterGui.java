@@ -16,8 +16,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
 
     @Override
     public void updateInformations(ReportingPackage info) {
-        refreshButton.setText("Refresh");
-        refreshButton.setEnabled(true);
         //Hardware
         cpuLabel.setText(info.getCpuLoad() + " by " + info.getCpuFreq());
         memoryLabel.setText(info.getMemoryUsed() + " of " + info.getMemoryTotal());
@@ -35,8 +33,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
 
     @Override
     public void clearInformations() {
-        refreshButton.setText("searching...");
-        refreshButton.setEnabled(false);
         //Hardware
         cpuLabel.setText("--");
         memoryLabel.setText("--");
@@ -58,7 +54,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
     public ReporterGui() {
         control = new ReporterControl(this);
         initComponents();
-        control.performRefreshActrion();
+        control.registerClient();
     }
 
     /**
@@ -98,7 +94,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         osLabel = new javax.swing.JLabel();
         updaterLabel = new javax.swing.JLabel();
         shutdownButton = new javax.swing.JButton();
-        refreshButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("YAYU Reporter");
@@ -283,13 +278,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
             }
         });
 
-        refreshButton.setText("Refresh");
-        refreshButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                refreshButtonActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -299,8 +287,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(refreshButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(shutdownButton)))
                 .addContainerGap())
         );
@@ -308,9 +295,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(shutdownButton)
-                    .addComponent(refreshButton))
+                .addComponent(shutdownButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1)
                 .addContainerGap())
@@ -325,11 +310,9 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
 
     private void shutdownButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shutdownButtonActionPerformed
         control.performShutdownAction();
+        shutdownButton.setEnabled(false);
     }//GEN-LAST:event_shutdownButtonActionPerformed
 
-    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
-        control.performRefreshActrion();
-    }//GEN-LAST:event_refreshButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel cpuLabel;
     private javax.swing.JButton jButton3;
@@ -354,7 +337,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
     private javax.swing.JLabel memoryLabel;
     private javax.swing.JLabel osLabel;
     private javax.swing.JLabel pimsLabel;
-    private javax.swing.JButton refreshButton;
     private javax.swing.JLabel revisionLabel;
     private javax.swing.JLabel romLabel;
     private javax.swing.JButton shutdownButton;

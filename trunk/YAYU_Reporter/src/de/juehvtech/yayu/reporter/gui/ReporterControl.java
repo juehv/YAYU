@@ -25,7 +25,7 @@ public class ReporterControl {
         this.parent = parent;
     }
 
-    public void performRefreshActrion() {
+    public void registerClient() {
         parent.clearInformations();
         new Thread(new Runnable() {
             @Override

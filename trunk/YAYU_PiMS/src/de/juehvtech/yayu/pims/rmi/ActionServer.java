@@ -5,6 +5,7 @@
 package de.juehvtech.yayu.pims.rmi;
 
 import de.juehvtech.yayu.discovering.server.DiscoveringServer;
+import de.juehvtech.yayu.util.communication.PiMSActions;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;

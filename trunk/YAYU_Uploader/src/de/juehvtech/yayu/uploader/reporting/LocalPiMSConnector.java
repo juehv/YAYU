@@ -4,7 +4,7 @@
  */
 package de.juehvtech.yayu.uploader.reporting;
 
-import de.juehvtech.yayu.pims.rmi.PiMSActions;
+import de.juehvtech.yayu.util.communication.PiMSActions;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
