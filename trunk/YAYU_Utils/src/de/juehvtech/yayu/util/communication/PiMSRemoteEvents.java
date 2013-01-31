@@ -12,9 +12,11 @@ import java.rmi.RemoteException;
  *
  * @author Jens
  */
-public interface ReportingClientActions extends Remote {
+public interface PiMSRemoteEvents extends Remote {
 
     void fullUpdate(ReportingPackage info) throws RemoteException;
 
     void dynamicUpdate(String eventLine) throws RemoteException;
+
+    void hardwareUpdate(String parameter) throws RemoteException;
 }
