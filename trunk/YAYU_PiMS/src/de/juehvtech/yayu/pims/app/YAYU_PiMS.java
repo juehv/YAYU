@@ -7,7 +7,7 @@ package de.juehvtech.yayu.pims.app;
 import de.juehvtech.yayu.discovering.server.DiscoveringServer;
 import de.juehvtech.yayu.discovering.server.DiscoveringServerFactory;
 import de.juehvtech.yayu.discovering.util.IdGenerator;
-import de.juehvtech.yayu.pims.rmi.ActionServer;
+import de.juehvtech.yayu.pims.rmi.LocalEventServer;
 import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -31,9 +31,9 @@ public class YAYU_PiMS {
 
         final DiscoveringServer disServer = DiscoveringServerFactory.getServer(versionString);
         disServer.startServer();
-        ActionServer rmiServer;
+        LocalEventServer rmiServer;
         try {
-            rmiServer = new ActionServer(disServer);
+            rmiServer = new LocalEventServer(disServer);
             rmiServer.startServer();
         } catch (RemoteException ex) {
             Logger.getLogger(YAYU_PiMS.class.getName())

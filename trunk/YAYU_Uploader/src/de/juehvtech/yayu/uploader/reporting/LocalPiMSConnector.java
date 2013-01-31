@@ -4,7 +4,7 @@
  */
 package de.juehvtech.yayu.uploader.reporting;
 
-import de.juehvtech.yayu.util.communication.PiMSActions;
+import de.juehvtech.yayu.util.communication.PiMSEvents;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -22,12 +22,12 @@ public class LocalPiMSConnector implements MetaDataListener, ProgressListener {
 
     private static final String RMI_URL = "//127.0.0.1/PiMS";
     private static LocalPiMSConnector INSTANCE = null;
-    private PiMSActions pims = null;
+    private PiMSEvents pims = null;
     private String registeredServer = "";
 
     private LocalPiMSConnector() {
         try {
-            pims = (PiMSActions) Naming.lookup(RMI_URL);
+            pims = (PiMSEvents) Naming.lookup(RMI_URL);
             //empty
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(LocalPiMSConnector.class.getName())

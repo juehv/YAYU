@@ -5,7 +5,7 @@
 package de.juehvtech.yayu.pims.rmi;
 
 import de.juehvtech.yayu.discovering.server.DiscoveringServer;
-import de.juehvtech.yayu.util.communication.PiMSActions;
+import de.juehvtech.yayu.util.communication.PiMSEvents;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -19,12 +19,12 @@ import java.util.logging.Logger;
  *
  * @author Jens
  */
-public class ActionServer extends UnicastRemoteObject implements PiMSActions {
+public class LocalEventServer extends UnicastRemoteObject implements PiMSEvents {
 
     private static final String REGISTRY = "PiMS";
     private final DiscoveringServer disServer;
 
-    public ActionServer(DiscoveringServer disServer) throws RemoteException {
+    public LocalEventServer(DiscoveringServer disServer) throws RemoteException {
         super();
         this.disServer = disServer;
     }
@@ -34,7 +34,7 @@ public class ActionServer extends UnicastRemoteObject implements PiMSActions {
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
             Naming.rebind(REGISTRY, this);
         } catch (MalformedURLException | RemoteException ex) {
-            Logger.getLogger(ActionServer.class.getName())
+            Logger.getLogger(LocalEventServer.class.getName())
                     .log(Level.SEVERE, null, ex);
         }
     }

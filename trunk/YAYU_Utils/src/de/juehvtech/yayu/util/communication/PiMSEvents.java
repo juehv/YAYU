@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  *
  * @author Jens
  */
-public interface PiMSActions extends Remote {
+public interface PiMSEvents extends Remote {
 
     void reportServerStatus(String status) throws RemoteException;
 }
