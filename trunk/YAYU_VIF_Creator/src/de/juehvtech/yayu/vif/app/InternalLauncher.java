@@ -5,6 +5,9 @@
 package de.juehvtech.yayu.vif.app;
 
 import de.juehvtech.yayu.vif.gui.MainGui;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -15,12 +18,13 @@ import javax.swing.UIManager;
  */
 public class InternalLauncher {
 
-    public static void launchVIFCreator(final JFrame parent) {
+    public static void launchVIFCreator(final JFrame parent)
+            throws InterruptedException, InvocationTargetException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
                 MainGui gui = new MainGui();

@@ -18,23 +18,19 @@ import javax.swing.UIManager;
  */
 public class InternalLauncher {
 
-    public void launchReporter(final JFrame parent) {
+    public void launchReporter(final JFrame parent)
+            throws InterruptedException, InvocationTargetException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        try {
-            SwingUtilities.invokeAndWait(new Runnable() {
-                @Override
-                public void run() {
-                    ReporterGui window = new ReporterGui();
-                    window.setLocationRelativeTo(parent);
-                    window.setVisible(true);
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(InternalLauncher.class.getName())
-                    .log(Level.SEVERE, null, ex);
-        }
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                ReporterGui window = new ReporterGui();
+                window.setLocationRelativeTo(parent);
+                window.setVisible(true);
+            }
+        });
     }
 }
