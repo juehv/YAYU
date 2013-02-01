@@ -25,7 +25,8 @@ public class YAYU_Reporer {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                ReporterGui window = new ReporterGui();
+                //TODO run discovering client
+                ReporterGui window = new ReporterGui(null);
                 window.setLocationRelativeTo(null);
                 window.setVisible(true);
             }

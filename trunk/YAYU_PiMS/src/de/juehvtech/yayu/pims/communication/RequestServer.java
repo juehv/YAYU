@@ -5,6 +5,7 @@
 package de.juehvtech.yayu.pims.communication;
 
 import de.juehvtech.yayu.pims.hardware.ScriptInterface;
+import de.juehvtech.yayu.util.communication.PiMSRequest;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;

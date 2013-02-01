@@ -4,11 +4,14 @@
  */
 package de.juehvtech.yayu.reporter.gui;
 
+import de.juehvtech.yayu.reporter.client.ReportingClient;
 import de.juehvtech.yayu.util.container.ReportingPackage;
 import java.awt.Desktop;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -20,32 +23,30 @@ import javax.swing.JOptionPane;
 public class ReporterControl {
 
     private final ReporterGui parent;
+    private ReportingClient client = null;
 
-    public ReporterControl(ReporterGui parent) {
+    public ReporterControl(ReporterGui parent, InetAddress server) {
         this.parent = parent;
+        try {
+            this.client = new ReportingClient(server, parent);
+        } catch (IOException ex) {
+            Logger.getLogger(ReporterControl.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }
 
     public void registerClient() {
         parent.clearInformations();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ReportingPackage report = null;
-                // client starten
-
-                if (report == null) {
-                    report = new ReportingPackage();
-                    report.setRomVersion("error");
-                    JOptionPane.showMessageDialog(parent, "Error while updateing Info.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                parent.updateInformations(report);
-            }
-        }).start();
+        try {
+            client.registerClient();
+        } catch (RemoteException ex) {
+            Logger.getLogger(ReporterControl.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }
 
     public void performShutdownAction() {
-        // client starten
+        client.sendShutdownCommand();
     }
 
     public void performDonateAction() {

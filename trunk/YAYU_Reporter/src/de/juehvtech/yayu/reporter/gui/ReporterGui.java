@@ -5,6 +5,7 @@
 package de.juehvtech.yayu.reporter.gui;
 
 import de.juehvtech.yayu.util.container.ReportingPackage;
+import java.net.InetAddress;
 
 /**
  *
@@ -21,7 +22,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         memoryLabel.setText(info.getMemoryUsed() + " of " + info.getMemoryTotal());
         revisionLabel.setText(info.getBoardRevision());
         //Events
-        jList1.setListData(info.getEvents());
+        eventList.setListData(info.getEvents());
         //Version
         romLabel.setText(info.getRomVersion());
         pimsLabel.setText(info.getPimsVersion());
@@ -38,7 +39,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         memoryLabel.setText("--");
         revisionLabel.setText("--");
         //Events
-        jList1.setListData(new String[]{"--"});
+        eventList.setListData(new String[]{"--"});
         //Version
         romLabel.setText("--");
         pimsLabel.setText("--");
@@ -48,11 +49,16 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         updaterLabel.setText("--");
     }
 
+    @Override
+    public void updateEvent(String[] eventLine) {
+        eventList.setListData(eventLine);
+    }
+
     /**
      * Creates new form ReporterGui
      */
-    public ReporterGui() {
-        control = new ReporterControl(this);
+    public ReporterGui(InetAddress server) {
+        control = new ReporterControl(this, server);
         initComponents();
         control.registerClient();
     }
@@ -78,7 +84,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         revisionLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        eventList = new javax.swing.JList();
         jPanel3 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
@@ -157,7 +163,7 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
 
         jTabbedPane1.addTab("Hardware", jPanel1);
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(eventList);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -312,9 +318,9 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
         control.performShutdownAction();
         shutdownButton.setEnabled(false);
     }//GEN-LAST:event_shutdownButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel cpuLabel;
+    private javax.swing.JList eventList;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -325,7 +331,6 @@ public class ReporterGui extends javax.swing.JFrame implements ReportListener {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

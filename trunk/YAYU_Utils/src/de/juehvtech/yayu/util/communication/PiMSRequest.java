@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.juehvtech.yayu.pims.communication;
+package de.juehvtech.yayu.util.communication;
 
 import java.io.Serializable;
 
@@ -17,6 +17,10 @@ public class PiMSRequest implements Serializable {
         SHUTDOWN, REGISTER_EVENT_LISTENER, DELETE_EVENT_LISTENER;
     }
     private Type type;
+
+    public PiMSRequest(Type type) {
+        this.type = type;
+    }
 
     public Type getType() {
         return type;

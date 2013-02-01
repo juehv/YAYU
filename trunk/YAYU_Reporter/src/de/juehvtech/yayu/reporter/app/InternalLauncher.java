@@ -6,6 +6,7 @@ package de.juehvtech.yayu.reporter.app;
 
 import de.juehvtech.yayu.reporter.gui.ReporterGui;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -18,7 +19,7 @@ import javax.swing.UIManager;
  */
 public class InternalLauncher {
 
-    public void launchReporter(final JFrame parent)
+    public void launchReporter(final JFrame parent, final InetAddress server)
             throws InterruptedException, InvocationTargetException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -27,7 +28,7 @@ public class InternalLauncher {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                ReporterGui window = new ReporterGui();
+                ReporterGui window = new ReporterGui(server);
                 window.setLocationRelativeTo(parent);
                 window.setVisible(true);
             }

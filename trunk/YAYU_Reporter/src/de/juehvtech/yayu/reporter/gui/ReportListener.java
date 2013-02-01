@@ -14,7 +14,7 @@ public interface ReportListener {
 
     void updateInformations(ReportingPackage info);
 
-    void updateEvent(String eventLine);
+    void updateEvent(String[] eventLine);
 
     void clearInformations();
 }

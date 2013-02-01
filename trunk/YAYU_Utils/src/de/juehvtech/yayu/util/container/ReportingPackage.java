@@ -73,6 +73,10 @@ public class ReportingPackage {
         return events.toArray(new String[0]);
     }
 
+    public List<String> getEventList() {
+        return events;
+    }
+
     public void setEvents(List<String> events) {
         this.events = events;
     }
