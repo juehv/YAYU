@@ -9,6 +9,7 @@ import de.juehvtech.yayu.discovering.server.DiscoveringServerFactory;
 import de.juehvtech.yayu.discovering.util.IdGenerator;
 import de.juehvtech.yayu.pims.communication.LocalEventServer;
 import de.juehvtech.yayu.pims.communication.RemoteEventConnector;
+import de.juehvtech.yayu.pims.communication.RequestServer;
 import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -30,13 +31,18 @@ public class YAYU_PiMS {
 
 
 
-        final DiscoveringServer disServer = DiscoveringServerFactory.getServer(versionString);
+
+        final RemoteEventConnector remoteEventConnector =
+                new RemoteEventConnector();
+        final DiscoveringServer disServer =
+                DiscoveringServerFactory.getServer(versionString);
         disServer.startServer();
-        RemoteEventConnector remoteEventConnector;
-        LocalEventServer rmiServer;
+        final RequestServer requestServer =
+                new RequestServer(remoteEventConnector);
+        requestServer.startServer();
         try {
-            remoteEventConnector = new RemoteEventConnector();
-            rmiServer = new LocalEventServer(disServer, remoteEventConnector);
+            LocalEventServer rmiServer =
+                    new LocalEventServer(disServer, remoteEventConnector);
             rmiServer.startServer();
         } catch (RemoteException ex) {
             Logger.getLogger(YAYU_PiMS.class.getName())
@@ -47,6 +53,7 @@ public class YAYU_PiMS {
             @Override
             public void run() {
                 disServer.shutdownServer();
+                requestServer.shutdownServer();
             }
         });
 

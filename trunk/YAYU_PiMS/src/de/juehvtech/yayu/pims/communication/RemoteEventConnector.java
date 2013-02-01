@@ -7,6 +7,7 @@ package de.juehvtech.yayu.pims.communication;
 import de.juehvtech.yayu.pims.hardware.ScriptInterface;
 import de.juehvtech.yayu.util.communication.PiMSRemoteEvents;
 import de.juehvtech.yayu.util.container.ReportingPackage;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -67,11 +68,11 @@ public class RemoteEventConnector {
             ReportingPackage msg = new ReportingPackage();
             ScriptInterface.performAndInterpretHardwareStatusScript(msg);
             msg.setEvents(messages);
-            ScriptInterface.performVersionScript(msg);
+            ScriptInterface.performAndInterpretVersionScript(msg);
             connection.fullUpdate(msg);
-        } catch (RemoteException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(RemoteEventConnector.class.getName())
-                    .log(Level.WARNING, null, ex);
+                    .log(Level.SEVERE, null, ex);
         }
     }
 
@@ -82,7 +83,7 @@ public class RemoteEventConnector {
         try {
             connection.hardwareUpdate(ScriptInterface
                     .performHardwareStatusScript());
-        } catch (RemoteException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(RemoteEventConnector.class.getName())
                     .log(Level.WARNING, null, ex);
         }
