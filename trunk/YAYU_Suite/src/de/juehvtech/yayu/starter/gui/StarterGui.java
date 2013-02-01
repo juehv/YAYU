@@ -7,6 +7,13 @@ package de.juehvtech.yayu.starter.gui;
 import de.juehvtech.yayu.discovering.container.ServerInformationPackage;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,6 +22,7 @@ import java.awt.event.WindowEvent;
 public class StarterGui extends javax.swing.JFrame implements DiscoveringCallbackListener {
 
     private StarterGuiControl control;
+    private String ip = null;
 
     @Override
     public void updateStatus(ServerInformationPackage info) {
@@ -22,6 +30,7 @@ public class StarterGui extends javax.swing.JFrame implements DiscoveringCallbac
         jLabel5.setText(info.getIp());
         jLabel6.setText(info.getRom());
         jLabel8.setText(info.getStatus());
+        ip = info.getIp();
     }
 
     @Override
@@ -30,6 +39,7 @@ public class StarterGui extends javax.swing.JFrame implements DiscoveringCallbac
         jLabel5.setText("");
         jLabel6.setText("");
         jLabel8.setText("");
+        ip = null;
     }
 
     /**
@@ -84,7 +94,11 @@ public class StarterGui extends javax.swing.JFrame implements DiscoveringCallbac
         jButton2.setEnabled(false);
 
         jButton3.setText("Server Status");
-        jButton3.setEnabled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Server Info"));
 
@@ -174,8 +188,29 @@ public class StarterGui extends javax.swing.JFrame implements DiscoveringCallbac
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        de.juehvtech.yayu.vif.app.InternalLauncher.launchVIFCreator(this);
+        try {
+            de.juehvtech.yayu.vif.app.InternalLauncher.launchVIFCreator(this);
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(StarterGui.class.getName())
+                    .log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (ip == null) {
+            JOptionPane.showMessageDialog(this, "Kein Server gefunden!");
+            return;
+        }
+
+        try {
+            InetAddress server = Inet4Address.getByName(ip);
+            de.juehvtech.yayu.reporter.app.InternalLauncher.
+                    launchReporter(this, server);
+        } catch (UnknownHostException | InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(StarterGui.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Kein Server gefunden!");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

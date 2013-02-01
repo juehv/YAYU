@@ -19,7 +19,7 @@ import javax.swing.UIManager;
  */
 public class InternalLauncher {
 
-    public void launchReporter(final JFrame parent, final InetAddress server)
+    public static void launchReporter(final JFrame parent, final InetAddress server)
             throws InterruptedException, InvocationTargetException {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

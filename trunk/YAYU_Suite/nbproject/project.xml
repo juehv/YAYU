@@ -24,6 +24,14 @@
                 <id>jar</id>
             </reference>
             <reference>
+                <foreign-project>YAYU_Reporter</foreign-project>
+                <artifact-type>jar</artifact-type>
+                <script>build.xml</script>
+                <target>jar</target>
+                <clean-target>clean</clean-target>
+                <id>jar</id>
+            </reference>
+            <reference>
                 <foreign-project>YAYU_Utils</foreign-project>
                 <artifact-type>jar</artifact-type>
                 <script>build.xml</script>
