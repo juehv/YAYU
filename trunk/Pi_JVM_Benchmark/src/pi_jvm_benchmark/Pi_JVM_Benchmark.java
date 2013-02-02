@@ -84,7 +84,7 @@ public class Pi_JVM_Benchmark {
         System.out.println(tmpTime + "ms");
 
         // Treads
-        for (int j = 1; j < treadMax; j *= 10) {
+        for (int j = 1; j <= treadMax; j *= 10) {
             statTime = System.currentTimeMillis();
             List<Thread> threads = new ArrayList<>();
             for (int i = 0; i < j; i++) {
