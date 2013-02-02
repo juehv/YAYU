@@ -20,8 +20,8 @@ public class Pi_JVM_Benchmark {
     private static final int randomRounds = 1000000;
     private static double[] randoms = new double[randomRounds];
     private static String[] strings = new String[randomRounds];
-    private static final int intRounds = 1000000000;
-    private static final int treadMax = 1000000;
+    private static final int intRounds = 1000000;
+    private static final int treadMax = 1000;
 
     /**
      * @param args the command line arguments
@@ -69,7 +69,7 @@ public class Pi_JVM_Benchmark {
         }
         tmpTime = System.currentTimeMillis() - statTime;
         overallTime += tmpTime;
-        System.out.println("Time for concat" + randomRounds + " Strings:");
+        System.out.println("Time for concat " + randomRounds + " Strings:");
         System.out.println(tmpTime + "ms");
 
         // IO
