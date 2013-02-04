@@ -35,7 +35,7 @@ public class RemoteEventConnector {
     public void connect(InetAddress server) {
         try {
             connection = (PiMSRemoteEvents) Naming.lookup("//"
-                    + server.getHostAddress() + "/" + REGISTRY);
+                    + server.getHostAddress() + ":2222/" + REGISTRY);
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(RemoteEventConnector.class.getName())
                     .log(Level.WARNING, "No PiMS Server found.", ex);

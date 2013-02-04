@@ -1,0 +1,2 @@
+halt
+exit 0

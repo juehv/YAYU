@@ -46,9 +46,9 @@ public class ReportingClient extends UnicastRemoteObject implements PiMSRemoteEv
         listener.clearInformations();
         // start RMI Server
         try {
-            LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            Naming.rebind(REGISTRY, this);
-        } catch (MalformedURLException | RemoteException ex) {
+            LocateRegistry.createRegistry(2222);
+            LocateRegistry.getRegistry(2222).rebind(REGISTRY, this);
+        } catch ( RemoteException ex) {
             Logger.getLogger(ReportingClient.class.getName())
                     .log(Level.SEVERE, null, ex);
             throw new RemoteException("Error with RMI Server", ex);
@@ -57,6 +57,7 @@ public class ReportingClient extends UnicastRemoteObject implements PiMSRemoteEv
                         new ObjectOutputStream(pimsSocket.getOutputStream())) {
             os.writeObject(
                     new PiMSRequest(PiMSRequest.Type.REGISTER_EVENT_LISTENER));
+            os.flush();
         } catch (IOException ex) {
             Logger.getLogger(ReportingClient.class.getName())
                     .log(Level.SEVERE, null, ex);

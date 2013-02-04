@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class YAYU_PiMS {
 
-    private static final String versionString = "ROM 0.8 BETA";
+    public static final String versionString = "0.8 BETA";
 
     /**
      * @param args the command line arguments

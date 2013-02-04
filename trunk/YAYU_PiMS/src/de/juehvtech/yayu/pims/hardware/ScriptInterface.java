@@ -4,6 +4,7 @@
  */
 package de.juehvtech.yayu.pims.hardware;
 
+import de.juehvtech.yayu.pims.app.YAYU_PiMS;
 import de.juehvtech.yayu.util.container.ReportingPackage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,17 +53,18 @@ public class ScriptInterface {
         String version = performVersionScript();
         String[] info = version.split(":");
 
-        if (info.length < 7) {
+        if (info.length < 6) {
             return;
         }
 
         msg.setBoardRevision(info[0]);
         msg.setRomVersion(info[1]);
-        msg.setPimsVersion(info[2]);
-        msg.setLauncherVersion(info[3]);
-        msg.setOsVersion(info[4]);
-        msg.setUpdaterVersion(info[5]);
-        msg.setUploaderVersion(info[6]);
+        //TODO answer internally
+        msg.setPimsVersion(YAYU_PiMS.versionString);
+        msg.setLauncherVersion(info[2]);
+        msg.setOsVersion(info[3]);
+        msg.setUpdaterVersion(info[4]);
+        msg.setUploaderVersion(info[5]);
     }
 
     public static void performShutdownScript() throws IOException {

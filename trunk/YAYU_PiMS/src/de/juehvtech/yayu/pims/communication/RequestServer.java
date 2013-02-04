@@ -6,6 +6,7 @@ package de.juehvtech.yayu.pims.communication;
 
 import de.juehvtech.yayu.pims.hardware.ScriptInterface;
 import de.juehvtech.yayu.util.communication.PiMSRequest;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -79,9 +80,9 @@ public class RequestServer {
         @Override
         public void run() {
             try {
-                ObjectInputStream in = new ObjectInputStream(connection.getInputStream());
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(connection.getInputStream()));
 
-                while (!socket.isClosed()) {
+                if (!socket.isClosed()) {
                     try {
                         PiMSRequest request = (PiMSRequest) in.readObject();
                         processRequest(request);
@@ -101,9 +102,13 @@ public class RequestServer {
             switch (request.getType()) {
                 case REGISTER_EVENT_LISTENER:
                     connector.connect(connection.getInetAddress());
+                    connector.performFullUpdate();
+                    // start hardware runner
                     break;
                 case DELETE_EVENT_LISTENER:
                     connector.disconnect();
+                    
+                    // stop hardware runner
                     break;
                 case SHUTDOWN:
                     running = false;

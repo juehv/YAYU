@@ -25,13 +25,13 @@ public class InternalLauncher {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
         }
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
+//        SwingUtilities.invokeAndWait(new Runnable() {
+//            @Override
+//            public void run() {
                 ReporterGui window = new ReporterGui(server);
                 window.setLocationRelativeTo(parent);
                 window.setVisible(true);
-            }
-        });
+//            }
+//        });
     }
 }
