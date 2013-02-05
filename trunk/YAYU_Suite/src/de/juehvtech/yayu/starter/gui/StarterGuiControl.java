@@ -9,8 +9,14 @@ import de.juehvtech.yayu.discovering.client.DiscoveringClient;
 import de.juehvtech.yayu.discovering.client.DiscoveringClientFactory;
 import de.juehvtech.yayu.discovering.container.Messages;
 import de.juehvtech.yayu.discovering.container.ServerInformationPackage;
+import de.juehvtech.yayu.reporter.gui.ReporterGui;
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import sun.java2d.loops.GraphicsPrimitive;
 
 /**
@@ -54,5 +60,18 @@ public class StarterGuiControl {
 
     public void stopDiscovering() {
         isDiscovering = false;
+    }
+
+    public void performDonateAction() {
+        try {
+            Desktop.getDesktop().browse(new URI(
+                    "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5465UQ6WHWV7E"));
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(ReporterGui.class.getName()).log(Level.SEVERE,
+                    null, ex);
+            JOptionPane.showMessageDialog(parent,
+                    "An unexpected error ocured: " + ex.getLocalizedMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

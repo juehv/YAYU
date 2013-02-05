@@ -37,7 +37,8 @@ public class MainGui extends javax.swing.JFrame {
     }
 
     private void loadCatogories() {
-        DefaultComboBoxModel<String> model = ((DefaultComboBoxModel<String>) categoryComboBox.getModel());
+        DefaultComboBoxModel<String> model =
+                ((DefaultComboBoxModel<String>) categoryComboBox.getModel());
         for (String value : Category.getAsList()) {
             model.addElement(value);
         }
@@ -63,8 +64,10 @@ public class MainGui extends javax.swing.JFrame {
     private void checkProcess() {
         if (control.isVideoEmpty()) {
             processButton.setEnabled(false);
+            processMenuItem.setEnabled(false);
         } else {
             processButton.setEnabled(true);
+            processMenuItem.setEnabled(true);
         }
     }
 
@@ -167,8 +170,6 @@ public class MainGui extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         helpMenuItem = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
-        updateMenuItem = new javax.swing.JMenuItem();
-        jSeparator3 = new javax.swing.JPopupMenu.Separator();
         aboutMenuItem = new javax.swing.JMenuItem();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("de/juehvtech/yayu/vif/resources/vifgui_en"); // NOI18N
@@ -421,6 +422,7 @@ public class MainGui extends javax.swing.JFrame {
         jMenu2.setText(bundle.getString("menu_edit")); // NOI18N
 
         processMenuItem.setText(bundle.getString("menu_edit_process")); // NOI18N
+        processMenuItem.setEnabled(false);
         processMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 processMenuItemActionPerformed(evt);
@@ -448,15 +450,6 @@ public class MainGui extends javax.swing.JFrame {
         });
         jMenu4.add(helpMenuItem);
         jMenu4.add(jSeparator2);
-
-        updateMenuItem.setText(bundle.getString("menu_help_update")); // NOI18N
-        updateMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateMenuItemActionPerformed(evt);
-            }
-        });
-        jMenu4.add(updateMenuItem);
-        jMenu4.add(jSeparator3);
 
         aboutMenuItem.setText(bundle.getString("menu_help_about")); // NOI18N
         aboutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -538,8 +531,12 @@ public class MainGui extends javax.swing.JFrame {
                 || !descriptionArea.getText().isEmpty()
                 || !tagField.getText().isEmpty()) {
             int result = JOptionPane.showConfirmDialog(this,
-                    java.util.ResourceBundle.getBundle("de/juehvtech/yayu/vif/resources/vifgui_en").getString("dialog_confirm_dropvideo"),
-                    java.util.ResourceBundle.getBundle("de/juehvtech/yayu/vif/resources/vifgui_en").getString("dialog_confirm_drop"), JOptionPane.YES_NO_OPTION);
+                    java.util.ResourceBundle.getBundle(
+                    "de/juehvtech/yayu/vif/resources/vifgui_en").getString(
+                    "dialog_confirm_dropvideo"),
+                    java.util.ResourceBundle.getBundle(
+                    "de/juehvtech/yayu/vif/resources/vifgui_en").getString(
+                    "dialog_confirm_drop"), JOptionPane.YES_NO_OPTION);
             if (result != JOptionPane.YES_OPTION) {
                 return;
             }
@@ -583,10 +580,6 @@ public class MainGui extends javax.swing.JFrame {
         setNormalCursor();
     }//GEN-LAST:event_videoListMouseClicked
 
-    private void updateMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateMenuItemActionPerformed
-        JOptionPane.showMessageDialog(this, "Not supported in this Version!");
-    }//GEN-LAST:event_updateMenuItemActionPerformed
-
     private void playMovieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_playMovieButtonActionPerformed
         setWaitCursor();
         control.playVideo(filePathField.getText());
@@ -620,7 +613,9 @@ public class MainGui extends javax.swing.JFrame {
     private void saveAsPresetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsPresetButtonActionPerformed
         setWaitCursor();
         String presetName = JOptionPane.showInputDialog(this,
-                java.util.ResourceBundle.getBundle("de/juehvtech/yayu/vif/resources/vifgui_en").getString("dialog_input_insetpresetname"));
+                java.util.ResourceBundle.getBundle(
+                "de/juehvtech/yayu/vif/resources/vifgui_en").getString(
+                "dialog_input_insetpresetname"));
         if (presetName == null || presetName.isEmpty()) {
             checkButtons();
             setNormalCursor();
@@ -702,7 +697,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator2;
-    private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JButton newButton;
     private javax.swing.JButton playMovieButton;
@@ -713,7 +707,6 @@ public class MainGui extends javax.swing.JFrame {
     private javax.swing.JButton saveButton;
     private javax.swing.JTextField tagField;
     private javax.swing.JTextField titelField;
-    private javax.swing.JMenuItem updateMenuItem;
     private javax.swing.JList videoList;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,10 +6,7 @@ package de.juehvtech.yayu.vif.app;
 
 import de.juehvtech.yayu.vif.gui.MainGui;
 import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
@@ -27,9 +24,9 @@ public class InternalLauncher {
 //        SwingUtilities.invokeAndWait(new Runnable() {
 //            @Override
 //            public void run() {
-                MainGui gui = new MainGui();
-                gui.setLocationRelativeTo(parent);
-                gui.setVisible(true);
+        MainGui gui = new MainGui();
+        gui.setLocationRelativeTo(parent);
+        gui.setVisible(true);
 //            }
 //        });
     }
