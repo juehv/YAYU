@@ -23,8 +23,9 @@ ACTION_UPLOAD="${DISK_DIR}/upload"
 ACTION_UPDATE="${DISK_DIR}/update"
 
 # Calls
-CMD_UPLOAD="$ACTION_UPLOAD/YAYU_Uploader.jar"
-CMD_UPDATE="$ACTION_UPDATE/YAYU_Updater.jar"
+CMD_UPLOAD="${ACTION_UPLOAD}/YAYU_Uploader.jar"
+CMD_UPDATE="${ACTION_UPDATE}/YAYU_Updater.jar"
+SHUTDOWN="${PWD}/shutdown.sh"
 JAVA="/usr/bin/java -jar"
 
 # Funktions
@@ -37,6 +38,11 @@ function umount_exit (){
 	umount $DISK_DEV
 	unlock_exit
 }
+
+function exit_shutdown (){
+	umount $DISK_DEV
+	rm -f $LOCK_FILE
+	
 
 function check_LOCK (){
  if [ -e "${LOCK_FILE}" ]
@@ -69,9 +75,10 @@ function check_ACTIONS (){
    # TODO check if error and do not delete if there was an error
    echo "$( date +%Y/%m/%d-%H:%M:%S ) uploader exit with code \"${?}\". delete action" | tee -a -i $LOG_FILE
    rm -rf $ACTION_UPLOAD
-   echo "$( date +%Y/%m/%d-%H:%M:%S ) copy log, unlock and exit." | tee -a -i $LOG_FILE
+   echo "$( date +%Y/%m/%d-%H:%M:%S ) copy log, unlock and shutdown." | tee -a -i $LOG_FILE
    cp $LOG_FILE $DISK_DIR
    mv $LOG_FILE "${LOG_FILE}.sav.$( date +%Y/%m/%d-%H:%M:%S )"
+   exit_shutdown
   else
    echo "$( date +%Y/%m/%d-%H:%M:%S ) uploader not found. unlock and exit" | tee -a -i $LOG_FILE
   fi
