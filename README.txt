@@ -1,3 +1,4 @@
 YAYU is a open source youtube uploader.
-The project is currently in beta status.
-If you want to help me, feel free to write me a mail (German, English).
+I never finished the project since commercial projects are available.
+It is kind of working with common beta issues.
+If you want to finish the project, feel free to fork and contact me (German, English).
